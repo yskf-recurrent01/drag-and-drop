@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ドラッグ＆ドロップ 基礎編 -エリア移動-</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+  <main class="container">
+    <h1>ドラッグ＆ドロップ 基礎編 -エリア移動-</h1>
+    <div class="d-flex gap-4 mt-4">
+      <div class="area area-left flex-fill border border-2 border-primary-subtle rounded-3 p-4 bg-light shadow-sm"
+        style="min-height: 400px;">
+        <h2 class="h6 text-muted mb-3">Left Area</h2>
+        <div id="target1" class="target bg-primary text-white p-3 mb-2 rounded shadow-sm" style="cursor: move;"
+          draggable="true">Item 1
+        </div>
+        <div id="target2" class="target bg-warning text-dark p-3 mb-2 rounded shadow-sm" style="cursor: move;"
+          draggable="true">Item 2
+        </div>
+        <div id="target3" class="target bg-info text-white p-3 mb-2 rounded shadow-sm" style="cursor: move;"
+          draggable="true">Item 3
+        </div>
+      </div>
+      <div class="area area-right flex-fill border border-2 border-success-subtle rounded-3 p-4 bg-light shadow-sm"
+        style="min-height: 400px;">
+        <h2 class="h6 text-muted mb-3">Right Area</h2>
+      </div>
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <script src="./script.js"></script>
+</body>
+
+</html>

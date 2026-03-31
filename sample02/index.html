@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ドラッグ＆ドロップ 応用編 -スロット-</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <style>
+    :root {
+      --drop-zone-bg: #f8f9fa;
+      --drop-zone-border: #dee2e6;
+      --drop-zone-hover: #e9ecef;
+    }
+
+    .drop-zone {
+      width: 50%;
+      height: 120px;
+      vertical-align: middle;
+      background-color: var(--drop-zone-bg);
+      border: 2px dashed var(--drop-zone-border) !important;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .drop-zone:hover {
+      background-color: var(--drop-zone-hover);
+    }
+
+    /* ドラッグオーバー時の強調スタイル（JSで制御用） */
+    .drag-over {
+      background-color: #e3f2fd !important;
+      border-color: #0d6efd !important;
+      border-style: solid !important;
+    }
+
+    .target {
+      cursor: grab;
+      user-select: none;
+      transition: transform 0.1s ease;
+    }
+
+    .target:active {
+      cursor: grabbing;
+    }
+  </style>
+</head>
+
+<body class="bg-light">
+  <main class="container py-5">
+    <header class="text-center mb-5">
+      <h1 class="display-5 fw-bold">Drag & Drop 応用編</h1>
+      <p class="text-muted">テーブルのスロット（td）へアイテムを自由に移動できます</p>
+    </header>
+
+    <div class="row g-4">
+      <!-- 左側テーブルエリア -->
+      <div class="col-lg-6">
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+          <div class="card-header bg-primary text-white py-3">
+            <h2 class="h5 mb-0">Left Table</h2>
+          </div>
+          <div class="card-body p-0">
+            <table class="table table-bordered mb-0 border-0">
+              <tbody>
+                <tr>
+                  <td id="slot-l1" class="drop-zone">
+                    <div id="target1" class="target bg-primary text-white p-3 rounded-3 shadow-sm mx-auto text-center" draggable="true" style="width: 90%;">
+                      Item 1
+                    </div>
+                  </td>
+                  <td id="slot-l2" class="drop-zone">
+                    <div id="target2" class="target bg-warning text-dark p-3 rounded-3 shadow-sm mx-auto text-center" draggable="true" style="width: 90%;">
+                      Item 2
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td id="slot-l3" class="drop-zone"></td>
+                  <td id="slot-l4" class="drop-zone"></td>
+                </tr>
+                <tr>
+                  <td id="slot-l5" class="drop-zone"></td>
+                  <td id="slot-l6" class="drop-zone"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右側テーブルエリア -->
+      <div class="col-lg-6">
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+          <div class="card-header bg-success text-white py-3">
+            <h2 class="h5 mb-0">Right Table</h2>
+          </div>
+          <div class="card-body p-0">
+            <table class="table table-bordered mb-0 border-0">
+              <tbody>
+                <tr>
+                  <td id="slot-r1" class="drop-zone"></td>
+                  <td id="slot-r2" class="drop-zone"></td>
+                </tr>
+                <tr>
+                  <td id="slot-r3" class="drop-zone"></td>
+                  <td id="slot-r4" class="drop-zone"></td>
+                </tr>
+                <tr>
+                  <td id="slot-r5" class="drop-zone"></td>
+                  <td id="slot-r6" class="drop-zone"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <script src="./script.js"></script>
+</body>
+
+</html>
