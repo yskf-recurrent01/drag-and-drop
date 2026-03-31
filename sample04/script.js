@@ -28,7 +28,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         area.append(dragItem);
       }
 
-      const idNum = parseInt(id.replace('item',''));
+      const idNum = parseInt(id.replace('item', ''));
       sendUpdateData({
         id: idNum,
         status: area.id,
@@ -57,5 +57,6 @@ async function loadJSON(target) {
  */
 async function sendUpdateData(dataObject) {
   const res = await fetch(`./update_json.php?id=${dataObject.id}&status=${dataObject.status}`);
-  console.log(res);
+  const text = await res.text();
+  console.log(text);
 }
