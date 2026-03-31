@@ -1,9 +1,9 @@
 const areas = document.querySelectorAll('.area');
-const targets = document.querySelectorAll('.target');
+const items = document.querySelectorAll('.item');
 
-targets.forEach(target => {
+items.forEach(item => {
   // ドラッグ開始時の処理
-  target.addEventListener('dragstart', (e) => {
+  item.addEventListener('dragstart', (e) => {
     // データ転送用の識別子（ID）をセット
     e.dataTransfer.setData('text/plain', e.target.id);
     // ドラッグ中の要素を半透明にして「動かしている感」を出す
@@ -11,7 +11,7 @@ targets.forEach(target => {
   });
 
   // ドラッグ終了時の処理（ドロップの成否に関わらず実行）
-  target.addEventListener('dragend', (e) => {
+  item.addEventListener('dragend', (e) => {
     e.target.classList.remove('opacity-50');
   });
 });

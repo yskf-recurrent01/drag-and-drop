@@ -1,16 +1,16 @@
-const targets = document.querySelectorAll('.target');
+const items = document.querySelectorAll('.item');
 const slots = document.querySelectorAll('.drop-zone');
 
 let sourceSlot = null;
 
-targets.forEach(target => {
-  target.addEventListener('dragstart', e => {
+items.forEach(item => {
+  item.addEventListener('dragstart', e => {
     e.dataTransfer.setData('text/plain', e.target.id);
     sourceSlot = e.target.parentElement; // ドラッグ元のスロットを記録
     e.target.classList.add('opacity-50');
   });
 
-  target.addEventListener('dragend', e => {
+  item.addEventListener('dragend', e => {
     e.target.classList.remove('opacity-50');
   });
 });
