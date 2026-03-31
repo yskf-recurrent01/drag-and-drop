@@ -14,7 +14,7 @@
     <h1>DOM操作復習 -クリックでエリア移動-</h1>
     <p>左側のアイテムをクリックしたら、右側に移動するように実装してみよう</p>
     <div class="d-flex gap-4 mt-4">
-      <div class="area area-left flex-fill border border-2 border-primary-subtle rounded-3 p-4 bg-light shadow-sm"
+      <div id="area-left" class="area area-left flex-fill border border-2 border-primary-subtle rounded-3 p-4 bg-light shadow-sm"
         style="min-height: 400px;">
         <h2 class="h6 text-muted mb-3">Left Area</h2>
         <div id="item1" class="item bg-primary text-white p-3 mb-2 rounded shadow-sm" style="cursor: pointer;">Item
@@ -25,7 +25,7 @@
         <div id="item3" class="item bg-info text-white p-3 mb-2 rounded shadow-sm" style="cursor: pointer;">Item 3
         </div>
       </div>
-      <div class="area area-right flex-fill border border-2 border-success-subtle rounded-3 p-4 bg-light shadow-sm"
+      <div id="area-right" class="area area-right flex-fill border border-2 border-success-subtle rounded-3 p-4 bg-light shadow-sm"
         style="min-height: 400px;">
         <h2 class="h6 text-muted mb-3">Right Area</h2>
       </div>
@@ -34,7 +34,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-  <script src="./script.js"></script>
+  <!-- <script src="./script.js"></script> -->
+    <script src="./script_finish.js"></script>
 </body>
 
 </html>
