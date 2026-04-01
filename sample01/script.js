@@ -4,13 +4,13 @@ const items = document.querySelectorAll('.item');
 items.forEach(item => {
   // ドラッグ開始時の処理
   item.addEventListener('dragstart', (e) => {
-    // データ転送用の識別子（ID）をセット
+    // データ転送用のidをセット
     e.dataTransfer.setData('text/plain', e.target.id);
     // ドラッグ中の要素を半透明にして「動かしている感」を出す
     e.target.classList.add('opacity-50');
   });
 
-  // ドラッグ終了時の処理（ドロップの成否に関わらず実行）
+  // ドラッグが終了したら半透明解除（ドロップの成否に関わらず実行）
   item.addEventListener('dragend', (e) => {
     e.target.classList.remove('opacity-50');
   });
