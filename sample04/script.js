@@ -44,7 +44,8 @@ window.addEventListener('DOMContentLoaded', async () => {
  * @returns {Array} JSONファイルのデータ
  */
 async function loadJSON(target) {
-  let res = await fetch(target);
+  const timestamp = new Date().getTime();
+  let res = await fetch(target + '?t=' + timestamp);
   if (res.ok) {
     let json = await res.json();
     return json;
@@ -52,11 +53,10 @@ async function loadJSON(target) {
 }
 
 /**
- * 
+ * JSONデータを更新するPHPファイルに更新データを送信する非同期関数
  * @param {Object} dataObject JSONデータ更新に必要な値の配列
  */
 async function sendUpdateData(dataObject) {
   const res = await fetch(`./update_json.php?id=${dataObject.id}&status=${dataObject.status}`);
-  const text = await res.text();
-  console.log(text);
+  const json = await res.json();
 }
