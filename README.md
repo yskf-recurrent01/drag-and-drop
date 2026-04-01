@@ -74,7 +74,7 @@ dropZone.addEventListener('drop',(e) => {
 ```
 
 ## ドラッグアイテムのデータを操作するメソッド 
-### dataTransfer.setData(format,data)
+### DataTransfer.setData(format,data)
 ドラッグ可能なアイテムのデータを`DataTransfer`へセットするメソッド。
 #### 引数
 - **format**: 追加するデータの型(text/plainなど)
@@ -82,7 +82,7 @@ dropZone.addEventListener('drop',(e) => {
 #### 戻り値
 - なし
 
-### dataTransfer.getData(format)
+### DataTransfer.getData(format)
 `DataTransfer`にセットしたデータを取り出すメソッド。
 #### 引数
 - **formt**: 受け取るデータの型を指定する
