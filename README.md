@@ -46,7 +46,6 @@ item1.addEventListener('dragstart', (e) => {
     e.dataTransfer.setData('text/plain',e.target.id); 
 });
 ```
-
 ## ドロップ可能なエリア
 ほとんどの要素はデフォルトではドロップ可能な要素では**ありません。**
 
@@ -61,6 +60,7 @@ dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();
 });
 dropZone.addEventListener('drop',(e) => {
+    // dropイベントをe.preventDefault()でキャンセル
     e.preventDefault();
     // DataTransferオブジェクトにセットされていたidを取得
     const id = e.dataTrasfer.getData('text/plain');
@@ -72,3 +72,21 @@ dropZone.addEventListener('drop',(e) => {
     }
 });
 ```
+
+## ドラッグアイテムのデータを操作するメソッド 
+### dataTransfer.setData(format,data)
+ドラッグ可能なアイテムのデータを`DataTransfer`へセットするメソッド。
+#### 引数
+- **format**: 追加するデータの型(text/plainなど)
+- **data**: 追加したいデータ
+#### 戻り値
+- なし
+
+### dataTransfer.getData(format)
+`DataTransfer`にセットしたデータを取り出すメソッド。
+#### 引数
+- **formt**: 受け取るデータの型を指定する
+#### 戻り値
+- 引数`format`で指定した型のデータ
+
+※安全にデータにアクセスするには`dragstart` と `drop` イベントの間に操作する。 
