@@ -20,5 +20,5 @@ $json = json_encode($todo_array, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
 file_put_contents('./todo.json', $json);
 
-// フロントエンド（JS側）に処理結果のJSONを返す（fetchのレスポンスとして必要になる場合があります）
+// フロントエンド（JS側）に処理結果のJSONを返す
 echo $json;
