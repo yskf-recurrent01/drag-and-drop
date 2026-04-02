@@ -1,24 +1,25 @@
 window.addEventListener('DOMContentLoaded', async () => {
   const areas = Array.from(document.querySelectorAll('.area'));
-  const todoData = await getTaskData();
+  const taskData = await getTaskData();
   const statusData = await getStatusData();
 
-  statusData.forEach(status => status.id = `area-${status.id}`);
+  // statusData.forEach(status => status.id = `area-${status.id}`);
 
   areas.forEach((area, i) => {
-    area.id = statusData[i].id;
+    area.id = `area-${statusData[i].id}`;
+    area.dataset.areaId = statusData[i].id;
     area.querySelector('h2').innerText = statusData[i].status;
   });
-  todoData.forEach(data => {
+  taskData.forEach(task => {
     let html = '';
-    html = `<div id="item${data.id}" class="item bg-warning text-dark p-3 mb-2 rounded shadow-sm" style="cursor: pointer;" draggable="true">${data.title}</div>`;
-    areas.find(area => area.id === `area-${data.status}`).innerHTML += html;
+    html = `<div id="item${task.id}" data-item-id="${task.id}" class="item bg-warning text-dark p-3 mb-2 rounded shadow-sm" style="cursor: pointer;" draggable="true">${task.title}</div>`;
+    areas.find(area => parseInt(area.dataset.areaId) === parseInt(task.status)).innerHTML += html;
   });
 
   const items = document.querySelectorAll('.item');
   items.forEach(item => {
     item.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/plain', e.target.id);
+      e.dataTransfer.setData('text/plain', e.target.dataset.itemId);
     });
   });
   areas.forEach(area => {
@@ -27,16 +28,15 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
     area.addEventListener('drop', e => {
       e.preventDefault();
-      const id = e.dataTransfer.getData('text/plain');
-      const dragItem = document.getElementById(id);
+      const itemId = e.dataTransfer.getData('text/plain');
+      const dragItem = document.querySelector(`[data-item-id="${itemId}"]`);
 
       if (dragItem) {
         area.append(dragItem);
       }
 
-      const idNum = parseInt(id.replace('item', ''));
       updateTask({
-        id: idNum,
+        id: parseInt(itemId),
         status: area.id.replace('area-', ''),
       });
     })
@@ -102,8 +102,11 @@ function showMsg(json) {
   // アニメーションの設定
   setupAlertAnimation(alertElm);
   // 一定時間経過したらDOMから削除
+  console.log(alertWrapper.children.length);
   setTimeout(() => {
-    alertWrapper.removeChild(alertElm);
+    if (alertWrapper.children.length > 0) {
+      alertWrapper.removeChild(alertElm);
+    }
   }, 3000);
 }
 
