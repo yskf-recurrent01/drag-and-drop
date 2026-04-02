@@ -46,10 +46,15 @@ item1.addEventListener('dragstart', (e) => {
     e.dataTransfer.setData('text/plain',e.target.id); 
 });
 ```
+
+なお、**ブラウザの外**からファイル(画像、CSV、JSON、PDF等)を、ドロップ可能なエリアへドロップし、データを取り込むことも可能です。
+
+取り込んだデータをサーバサイドへ送信して、ファイルのアップロードやCSVデータを読み込んでDBへ登録するなどの処理へ繋げられます。
+
 ## ドロップ可能なエリア
 ほとんどの要素はデフォルトではドロップ可能な要素では**ありません。**
 
-任意の要素をドロップ可能なエリアとするには、そのエリアの`dragover`イベントを`preventDefault()`でキャンセルする必要があります。
+任意の要素をドロップ可能なエリアとするには、そのエリアの`dragover`、`drop`イベントを`preventDefault()`でキャンセルする必要があります。
 ```html
 <div id="drop-zone">ドロップゾーン</div>
 ```
@@ -89,4 +94,38 @@ dropZone.addEventListener('drop',(e) => {
 #### 戻り値
 - 引数`format`で指定した型のデータ
 
-※安全にデータにアクセスするには`dragstart` と `drop` イベントの間に操作する。 
+※安全にデータにアクセスするには`dragstart` と `drop` イベントの間に操作しましょう。 
+
+## (補足) JavaScriptでファイルをサーバーへ送信する方法
+HTMLの`<form>`を介さずに、ファイルをサーバサイドにPOST送信する場合は`FormData`クラスを利用します。
+
+※テキストデータであればJSON形式などで可。ただしPHP側での受け取り方に注意。`$_POST`では受け取れない。
+
+### 空のフォームを作成
+```javascript
+const formData = new FormData();
+```
+
+### フォームにデータをセット
+```javascript
+// formData.append(key,value);
+formData.append('user_name',userName);
+formData.append('image',file);
+```
+**「key:value」** のペアでデータが送信されます。開発者ツールのネットワークで確認しよう。
+
+### fetch()メソッドでフォームデータを送信
+```javascript
+// フォームデータを送信する非同期関数
+async function sendData(){
+    const res = await fetch('https://test.com/upload.php',{
+        method: 'post', // 送信方式
+        body: formData, // 送信内容
+    });
+    const json = await res.json();
+    console.log(json.msg);
+}
+
+sendData(); // 関数の実行
+```
+このように送信すれば `https://test.com/upload.php` で `$_POST` や `$_FILES` でのデータの受け取り・操作が可能になります。
