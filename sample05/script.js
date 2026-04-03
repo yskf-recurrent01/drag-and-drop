@@ -186,15 +186,13 @@ async function init() {
   const items = await renderTasks(taskData, areas);
   console.log(items)
   // イベントリスナーの登録
-  setupEventListener(items);
+  setupEventListener(items,areas);
 }
 
 function setupStatusArea(statusData) {
   console.log(statusData);
   const areas = Array.from(document.querySelectorAll('.area'));
-  // console.log(areas);
   areas.forEach((area, i) => {
-    // console.log(area.dataset);
     area.dataset.statusId = statusData[i].id;
     area.querySelector('h2').textContent = statusData[i].status;
     const children = [...area.children];
@@ -209,18 +207,45 @@ async function renderTasks(taskData, areas) {
   items = [];
   taskData.forEach(task => {
     // タスクのアイテムを作成し、各ステータスのエリアへ挿入
-    let html = '';
     let itemElm = document.createElement('div');
     itemElm.classList.add('item', 'bg-warning', 'text-dark', 'p-3', 'mb-2', 'rounded', 'shadow-sm');
     itemElm.dataset.itemId = task.id;
     itemElm.draggable = true;
     itemElm.style.cursor = 'pointer';
     itemElm.textContent = task.title;
-    // html = `<div id="item${task.id}" data-item-id="${task.id}" class="item bg-warning text-dark p-3 mb-2 rounded shadow-sm" style="cursor: pointer;" draggable="true">${task.title}</div>`;
-    const targetArea = areas.find(area=> parseInt(area.dataset.statusId)=== parseInt(task.status));
+    const targetArea = areas.find(area => parseInt(area.dataset.statusId) === parseInt(task.status));
     targetArea.insertAdjacentElement('beforeend', itemElm);
     items.push(itemElm);
   });
   return items;
+}
+
+
+function setupEventListener(items,areas) {
+  // タスクアイテムのドラッグ処理
+  items.forEach(item => {
+    item.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', e.target.dataset.itemId);
+      console.log(e.target.dataset.itemId)
+    });
+  });
+  areas.forEach(area => {
+    area.addEventListener('dragover', (e) => {
+      e.preventDefault();
+    });
+    area.addEventListener('drop', e => {
+      e.preventDefault();
+      const itemId = e.dataTransfer.getData('text/plain');
+      const dragItem = document.querySelector(`[data-item-id="${itemId}"]`);
+
+      if (dragItem) {
+        area.append(dragItem);
+      }
+      updateTask({
+        id: parseInt(itemId),
+        status: parseInt(area.dataset.statusId),
+      });
+    })
+  });
 
 }
