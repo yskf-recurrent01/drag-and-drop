@@ -1,5 +1,6 @@
 window.addEventListener('DOMContentLoaded', async () => {
-
+  // イベントリスナーの登録
+  setupEventListener();
   init();
   // const areas = Array.from(document.querySelectorAll('.area'));
   // // タスクのデータをDBから取得
@@ -185,8 +186,7 @@ async function init() {
   // タスクアイテムの生成・描画
   const items = await renderTasks(taskData, areas);
   console.log(items)
-  // イベントリスナーの登録
-  setupEventListener(items,areas);
+
 }
 
 function setupStatusArea(statusData) {
@@ -209,7 +209,7 @@ async function renderTasks(taskData, areas) {
     // タスクのアイテムを作成し、各ステータスのエリアへ挿入
     let itemElm = document.createElement('div');
     itemElm.classList.add('item', 'bg-warning', 'text-dark', 'p-3', 'mb-2', 'rounded', 'shadow-sm');
-    itemElm.dataset.itemId = task.id;
+    itemElm.dataset.taskId = task.id;
     itemElm.draggable = true;
     itemElm.style.cursor = 'pointer';
     itemElm.textContent = task.title;
@@ -221,31 +221,78 @@ async function renderTasks(taskData, areas) {
 }
 
 
-function setupEventListener(items,areas) {
-  // タスクアイテムのドラッグ処理
-  items.forEach(item => {
-    item.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/plain', e.target.dataset.itemId);
-      console.log(e.target.dataset.itemId)
-    });
+function setupEventListener() {
+  // タスクアイテム
+  // イベントバブリングを利用し、アイテムの先祖(document)でイベントをキャッチ
+  document.addEventListener('dragstart', (e) => {
+    if (e.target.classList.contains('item')) {
+      e.dataTransfer.setData('text/plain', e.target.dataset.taskId);
+    }
   });
-  areas.forEach(area => {
-    area.addEventListener('dragover', (e) => {
-      e.preventDefault();
-    });
-    area.addEventListener('drop', e => {
-      e.preventDefault();
-      const itemId = e.dataTransfer.getData('text/plain');
-      const dragItem = document.querySelector(`[data-item-id="${itemId}"]`);
+
+  // ドロップエリア
+  // イベントバブリングを利用し、アイテムの先祖(document)でイベントをキャッチ
+  document.addEventListener('dragover', (e) => {
+    e.preventDefault();
+  });
+  document.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const targetArea = e.target.closest('.area');
+    if (targetArea) {
+      const taskId = e.dataTransfer.getData('text/plain');
+      const dragItem = document.querySelector(`[data-task-id="${taskId}"]`);
 
       if (dragItem) {
-        area.append(dragItem);
+        targetArea.append(dragItem);
       }
       updateTask({
-        id: parseInt(itemId),
-        status: parseInt(area.dataset.statusId),
+        id: parseInt(taskId),
+        status: parseInt(targetArea.dataset.statusId),
       });
-    })
+    }
   });
 
+  // ボタン
+  const openBtn = document.getElementById('open-btn');
+  const addBtn = document.getElementById('add-btn');
+  const cancelBtn = document.getElementById('cancel-btn');
+  const modal = document.getElementById('modal');
+
+  // モーダルを開く
+  openBtn.addEventListener('click', () => {
+    modal.showModal();
+  });
+
+  // モーダルを閉じる
+  cancelBtn.addEventListener('click', () => {
+    modal.close();
+  });
+
+  // 新規タスクの登録
+  addBtn.addEventListener('click', async () => {
+    const taskTitle = document.getElementById('task-title').value;
+    const newTaskData = { title: taskTitle };
+    try {
+      const res = await fetch('add_task.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newTaskData)
+      });
+
+      // 通信エラーが発生したら例外をスロー
+      if (!res.ok) throw new Error('通信エラーが発生しました。');
+
+      const json = await res.json();
+      // メッセージを表示
+      showMsg(json);
+
+      // モーダルを閉じて画面を再描画
+      modal.close();
+      init();
+    } catch (error) {
+      console.error(error);
+    }
+  });
 }
