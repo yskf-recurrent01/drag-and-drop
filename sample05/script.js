@@ -1,51 +1,103 @@
 window.addEventListener('DOMContentLoaded', async () => {
-  const areas = Array.from(document.querySelectorAll('.area'));
-  const taskData = await getTaskData();
-  const statusData = await getStatusData();
 
-  // statusData.forEach(status => status.id = `area-${status.id}`);
+  init();
+  // const areas = Array.from(document.querySelectorAll('.area'));
+  // // タスクのデータをDBから取得
+  // const taskData = await getTaskData();
+  // // ステータスのデータをDBから取得
+  // const statusData = await getStatusData();
 
-  areas.forEach((area, i) => {
-    area.id = `area-${statusData[i].id}`;
-    area.dataset.areaId = statusData[i].id;
-    area.querySelector('h2').innerText = statusData[i].status;
-  });
-  taskData.forEach(task => {
-    let html = '';
-    html = `<div id="item${task.id}" data-item-id="${task.id}" class="item bg-warning text-dark p-3 mb-2 rounded shadow-sm" style="cursor: pointer;" draggable="true">${task.title}</div>`;
-    areas.find(area => parseInt(area.dataset.areaId) === parseInt(task.status)).innerHTML += html;
-  });
+  // areas.forEach((area, i) => {
+  //   // ステータスエリアにデータをセット
+  //   area.id = `area-${statusData[i].id}`;
+  //   area.dataset.areaId = statusData[i].id;
+  //   area.querySelector('h2').innerText = statusData[i].status;
+  // });
 
-  const items = document.querySelectorAll('.item');
-  items.forEach(item => {
-    item.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/plain', e.target.dataset.itemId);
-    });
-  });
-  areas.forEach(area => {
-    area.addEventListener('dragover', (e) => {
-      e.preventDefault();
-    });
-    area.addEventListener('drop', e => {
-      e.preventDefault();
-      const itemId = e.dataTransfer.getData('text/plain');
-      const dragItem = document.querySelector(`[data-item-id="${itemId}"]`);
+  // renderTasks(taskData, areas);
+  // taskData.forEach(task => {
+  //   // タスクのアイテムを作成し、各ステータスのエリアへ挿入
+  //   let html = '';
+  //   html = `<div id="item${task.id}" data-item-id="${task.id}" class="item bg-warning text-dark p-3 mb-2 rounded shadow-sm" style="cursor: pointer;" draggable="true">${task.title}</div>`;
+  //   areas.find(area => parseInt(area.dataset.areaId) === parseInt(task.status)).insertAdjacentHTML('beforeend', html);
+  // });
 
-      if (dragItem) {
-        area.append(dragItem);
-      }
 
-      updateTask({
-        id: parseInt(itemId),
-        status: area.id.replace('area-', ''),
-      });
-    })
-  })
+  // const items = document.querySelectorAll('.item');
+  // console.log(items)
+  // // タスクアイテムのドラッグ処理
+  // items.forEach(item => {
+  //   item.addEventListener('dragstart', (e) => {
+  //     e.dataTransfer.setData('text/plain', e.target.dataset.itemId);
+  //     console.log(e.target.dataset.itemId)
+  //   });
+  // });
+  // areas.forEach(area => {
+  //   area.addEventListener('dragover', (e) => {
+  //     e.preventDefault();
+  //   });
+  //   area.addEventListener('drop', e => {
+  //     e.preventDefault();
+  //     const itemId = e.dataTransfer.getData('text/plain');
+  //     const dragItem = document.querySelector(`[data-item-id="${itemId}"]`);
+
+  //     if (dragItem) {
+  //       area.append(dragItem);
+  //     }
+  //     updateTask({
+  //       id: parseInt(itemId),
+  //       status: parseInt(area.dataset.areaId),
+  //     });
+  //   })
+  // });
+
+  // const openBtn = document.getElementById('open-btn');
+  // const cancelBtn = document.getElementById('cancel-btn');
+  // const addBtn = document.getElementById('add-btn');
+  // const modal = document.getElementById('modal');
+
+  // openBtn.addEventListener('click', () => {
+  //   modal.showModal();
+  // });
+
+  // cancelBtn.addEventListener('click', () => {
+  //   modal.close();
+  // });
+
+  // addBtn.addEventListener('click', async () => {
+  //   const taskTitle = document.getElementById('task-title').value;
+  //   addTask({ taskTitle: taskTitle });
+  //   modal.close();
+  //   const reacentTaskData = await getTaskData();
+  //   renderTasks(reacentTaskData, areas);
+  // });
+
 });
+
+
+
+/**
+ * タスクの新規登録関数
+ * @param {Object} newTaskData 新規登録するタスクのデータ 
+ */
+async function addTask(newTaskData) {
+  const res = await fetch('./add_task.php', {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(newTaskData), // JSON文字列を送信
+  });
+  if (res.ok) {
+
+  }
+  // 画面を再描画する。レンダリングの処理を関数化する。
+}
+
 
 /**
  * タスクを取得する非同期関数
- *  * @returns {Array} JSONファイルのデータ
+ *  * @returns {Array} タスクのJSONデータ
  */
 async function getTaskData() {
   let res = await fetch('./get_task_data.php');
@@ -77,11 +129,10 @@ async function updateTask(dataObject) {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(dataObject),
+    body: JSON.stringify(dataObject), // JSON文字列を送信
   });
   if (res.ok) {
     const json = await res.json();
-    // return json;
     showMsg(json);
   }
 }
@@ -102,9 +153,8 @@ function showMsg(json) {
   // アニメーションの設定
   setupAlertAnimation(alertElm);
   // 一定時間経過したらDOMから削除
-  console.log(alertWrapper.children.length);
   setTimeout(() => {
-    if (alertWrapper.children.length > 0) {
+    if (alertWrapper.contains(alertElm)) {
       alertWrapper.removeChild(alertElm);
     }
   }, 3000);
@@ -123,4 +173,54 @@ function setupAlertAnimation(alertElm) {
 
   };
   alertElm.animate(keyframes, options);
+}
+
+async function init() {
+  // タスクデータの取得
+  const taskData = await getTaskData();
+  // ステータスのデータをDBから取得
+  const statusData = await getStatusData();
+  // 各ステータスエリアセットアップ
+  const areas = setupStatusArea(statusData);
+  // タスクアイテムの生成・描画
+  const items = await renderTasks(taskData, areas);
+  console.log(items)
+  // イベントリスナーの登録
+  setupEventListener(items);
+}
+
+function setupStatusArea(statusData) {
+  console.log(statusData);
+  const areas = Array.from(document.querySelectorAll('.area'));
+  // console.log(areas);
+  areas.forEach((area, i) => {
+    // console.log(area.dataset);
+    area.dataset.statusId = statusData[i].id;
+    area.querySelector('h2').textContent = statusData[i].status;
+    const children = [...area.children];
+    children.forEach((child, i) => {
+      if (i > 0) child.remove();
+    });
+  });
+  return areas;
+}
+
+async function renderTasks(taskData, areas) {
+  items = [];
+  taskData.forEach(task => {
+    // タスクのアイテムを作成し、各ステータスのエリアへ挿入
+    let html = '';
+    let itemElm = document.createElement('div');
+    itemElm.classList.add('item', 'bg-warning', 'text-dark', 'p-3', 'mb-2', 'rounded', 'shadow-sm');
+    itemElm.dataset.itemId = task.id;
+    itemElm.draggable = true;
+    itemElm.style.cursor = 'pointer';
+    itemElm.textContent = task.title;
+    // html = `<div id="item${task.id}" data-item-id="${task.id}" class="item bg-warning text-dark p-3 mb-2 rounded shadow-sm" style="cursor: pointer;" draggable="true">${task.title}</div>`;
+    const targetArea = areas.find(area=> parseInt(area.dataset.statusId)=== parseInt(task.status));
+    targetArea.insertAdjacentElement('beforeend', itemElm);
+    items.push(itemElm);
+  });
+  return items;
+
 }

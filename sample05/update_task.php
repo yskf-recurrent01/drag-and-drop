@@ -5,7 +5,6 @@ header('Content-Type: application/json; charset=UTF-8');
 
 $json = file_get_contents('php://input');
 $data = json_decode($json,true);
-
 $id = (int)($data['id'] ?? 0);
 $status = (int)$data['status'] ?? '';
 
@@ -21,6 +20,7 @@ try {
   $stmt_task->bindValue(':id', $id, PDO::PARAM_INT);
   $stmt_task->execute();
   $task = $stmt_task->fetch();
+
   http_response_code(200);
   $msg = [
     'msg' => '「'.$task['title'].'」のステータスを「'.$task['status'].'」へ変更しました。'

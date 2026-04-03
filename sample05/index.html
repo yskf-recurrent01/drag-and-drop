@@ -45,7 +45,7 @@
       cursor: grabbing;
     }
 
-    #alert-wrapper{
+    #alert-wrapper {
       position: fixed;
       width: 100%;
       top: 10%;
@@ -65,19 +65,38 @@
       <p class="text-muted">ドラッグ&ドロップでタスクを入れ替える度にDBに保存する</p>
       <div id="alert-wrapper"></div>
     </header>
+    <div class="row mb-4 justify-content-center">
+      <div class="col">
+        <button type="button" class="btn btn-primary" id="open-btn">Add Task</button>
+      </div>
+    </div>
+    <dialog class="form p-5" id="modal">
+      <div class="row mb-3">
+        <div class="col mb-3">
+          <label for="task-title" class="form-label">タスク名</label>
+          <input type="text" name="task-title" id="task-title" class="form-control">
+        </div>
+      </div>
+      <div class="d-flex gap-3">
 
+        <button class="btn btn-secondary flex-fill" type="button" id="cancel-btn">Cancel</button>
+
+        <button class="btn btn-primary flex-fill" type="button" id="add-btn">Add</button>
+
+      </div>
+    </dialog>
     <div class="d-flex gap-4 mt-4">
       <div class="area not-started flex-fill border border-2 border-secondary-subtle rounded-3 p-4 bg-light shadow-sm"
         style="min-height: 400px;">
-        <h2 class="h6 text-secondary mb-3">Not Started</h2>
+        <h2 class="h6 text-secondary mb-3"></h2>
       </div>
       <div class="area in-progress flex-fill border border-2 border-primary-subtle rounded-3 p-4 bg-light shadow-sm"
         style="min-height: 400px;">
-        <h2 class="h6 mb-3 text-primary">In Progress</h2>
+        <h2 class="h6 mb-3 text-primary"></h2>
       </div>
       <div class="area completed flex-fill border border-2 border-success-subtle rounded-3 p-4 bg-light shadow-sm"
         style="min-height: 400px;">
-        <h2 class="h6 text-success mb-3">Completed</h2>
+        <h2 class="h6 text-success mb-3"></h2>
       </div>
     </div>
   </main>
