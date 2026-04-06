@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ドラッグ＆ドロップ 発展編 -データ保存(DB)-</title>
+  <title>ドラッグ＆ドロップ 発展編 -DB連携-</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <style>
@@ -55,13 +55,41 @@
       justify-content: center;
       align-items: center;
     }
+
+    [popover].msg-toast {
+      position: fixed;
+      top: auto;
+      right: 20px;
+      left: auto;
+      bottom: 20px;
+      margin: 0;
+      border: none;
+      min-width: 250px;
+      transition: bottom 0.3s ease;
+
+      &:popover-open {
+        animation: slide-in 0.3s ease-out
+      }
+    }
+
+    @keyframes slide-in {
+      from {
+        opacity: 0;
+        translate: 0 20px;
+      }
+
+      to {
+        opacity: 1;
+        translate: 0 0;
+      }
+    }
   </style>
 </head>
 
 <body class="bg-light">
   <main class="container py-5">
     <header class="text-center mb-5">
-      <h1 class="display-5 fw-bold">ドラッグ＆ドロップ 発展編<br> -データ保存(DB)-</h1>
+      <h1 class="display-5 fw-bold">ドラッグ＆ドロップ 発展編<br> -DB連携-</h1>
       <p class="text-muted">ドラッグ&ドロップでタスクを入れ替える度にDBに保存する</p>
       <div id="alert-wrapper"></div>
     </header>
@@ -96,6 +124,9 @@
         style="min-height: 400px;">
         <h2 class="h6 text-success mb-3"></h2>
       </div>
+    </div>
+    <div class="delete-area mt-5 p-5 text-center border border-2 border-danger-subtle">
+      Drop here to Delete
     </div>
   </main>
 
