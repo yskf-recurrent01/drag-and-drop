@@ -129,3 +129,120 @@ async function sendData(){
 sendData(); // 関数の実行
 ```
 このように送信すれば `https://test.com/upload.php` で `$_POST` や `$_FILES` でのデータの受け取り・操作が可能になります。
+
+
+# (補足)非同期通信(Ajax)でのデータ送信方法
+JavaScriptの非同期通信(Ajax)において、サーバサイドへデータを送信する方法をまとめました。
+
+## GET送信
+リクエストURLにパラメータを付与して送信する方法です。主にデータの取得時に用います。
+
+```javascript
+async function getPostData(status,authorId){
+    const endpoint = 'get_post_data.php';
+    // ベースのURLに投稿のステータスと著者IDをパラメータとして付与
+    const url = `${endpoint}?status=${status}&authorId=${authorId}`;
+    const res = await fetch(url);
+
+    if(res.ok){
+        const json = await res.json();
+        return json;
+    }
+}
+// 投稿のステータスが下書きで、著者IDが1の記事を取得
+getPostData('draft',1);
+```
+
+## POST送信
+パラメータを使わずに送信する方法です。主に新しいデータの送信、登録時に使用します。
+
+JavaScriptでは、HTMLの`<form>`タグで作成したフォームを介さずにPOST方式で送信することが可能です。
+
+### JSON文字列として送信する
+
+JavaScriptでPOST送信する方法の1つは、JSON文字列としてサーバーへ送る方法です。
+
+文字列や数値といったデータは送信できますが、画像やCSVなどの**ファイルの送信はできません。**
+
+```javascript
+async function addUserData(userData){
+    const endpoint = 'add_user_data.php';
+    const res = await fetch(endpoint,{
+        method: 'POST', // POST送信の指定
+        headers: { // リクエストヘッダの設定
+            'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify(userData), // JSON文字列を送信
+    });
+
+    if(res.ok){
+        const json = await res.json();
+        return json;
+    }
+}
+
+// 新規ユーザー「山田 太郎」の登録
+addUserData( 
+    {
+        name: '山田 太郎',
+        age: 25,
+        hobby: ['読書','サイクリング']
+    } 
+);
+```
+#### `fetch()`メソッド
+- 第1引数: データの送信先
+- 第2引数: 送信オプション(オブジェクト)
+
+第2引数では、送信方式、リクエストヘッダ、リクエスト本体などをオブジェクト形式で指定します。
+
+#### `JSON.stringify()`メソッド
+- 第1引数: JSON文字列に変換したいオブジェクトや値
+
+引数として渡したオブジェクトや値をJSON文字列に変換するメソッドです。
+
+#### PHPでの受信方法
+
+サーバサイド(PHP)でデータを受け取る際、フォームでPOST送信されたデータを受け取る`＄_POST`では受け取ることができません。
+
+```php
+$user_data = $_POST; // JSON文字列は$_POSTでは受け取れない。
+$user_data_json = file_get_content('php://input'); // JSON文字列を受け取りたいときはこうする
+$user_data = json_decode($user_data_json,true); // JSON文字列のままでは取り扱えないので連想配列の形に変換
+```
+
+### フォームデータとして送信する
+
+2つ目の方法は、JavaScriptで**フォームデータ**を作って送信する方法です。こちらの方法だと受信側は通常のフォームから送られてきた時と同じ処理でOKです。
+
+また、文字列や数値だけでなくファイルを送信することもできます。送信したファイルは、PHPでは`$_FILES`で受け受け取ります。
+
+
+```javascript
+async function uploadImage(imageFile){
+    const endpoint = 'upload_image.php';
+
+    const formData = new FromData(); // 空のフォームデータを作成
+    formData.append('image',imageFile); // フォームデータにキーと値をセットで追加(今回は画像ファイルを想定)
+    
+    const res = await fetch(endpoint,{
+        method: 'POST', // POST送信の指定
+        body: formData, // フォームデータを送信
+    });
+
+    if(res.ok){
+        const json = await res.json();
+        return json;
+    }
+}
+uploadImage(imageFile);
+```
+
+#### `FromData`インターフェース
+フォームとそこに含まれるキーと値のペアのセットを構築する。
+
+#### `FormData.append()`メソッド
+フォームオブジェクトにキーと値のペアを追加するメソッド。
+
+## まとめ
+利用シーンに応じて、適切な送信方法を選択して使いこなしましょう。
