@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.2
 -- https://www.phpmyadmin.net/
 --
--- ホスト: 127.0.0.1
--- 生成日時: 2026-04-01 09:21:08
--- サーバのバージョン： 10.4.32-MariaDB
--- PHP のバージョン: 8.2.12
+-- ホスト: localhost:3306
+-- 生成日時: 2026-04-04 05:43:43
+-- サーバのバージョン： 5.7.24
+-- PHP のバージョン: 8.2.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -32,9 +32,9 @@ USE `todo`;
 CREATE TABLE `statuses` (
   `id` int(11) NOT NULL,
   `status` varchar(255) NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- テーブルのデータのダンプ `statuses`
@@ -54,19 +54,19 @@ INSERT INTO `statuses` (`id`, `status`, `created_at`, `updated_at`) VALUES
 CREATE TABLE `tasks` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
-  `status` int(1) NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `status` int(1) NOT NULL DEFAULT '1',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- テーブルのデータのダンプ `tasks`
 --
 
 INSERT INTO `tasks` (`id`, `title`, `status`, `created_at`, `updated_at`) VALUES
-(1, '画面遷移図', 1, '2026-04-01 11:31:36', '2026-04-01 16:03:25'),
-(2, 'テーブル設計書', 1, '2026-04-01 11:31:36', '2026-04-01 16:03:29'),
-(3, 'ER図', 1, '2026-04-01 11:31:36', '2026-04-01 15:45:41');
+(1, '画面遷移図', 2, '2026-04-01 11:31:36', '2026-04-04 14:30:23'),
+(2, 'テーブル設計書', 1, '2026-04-01 11:31:36', '2026-04-04 14:30:36'),
+(3, 'ER図', 1, '2026-04-01 11:31:36', '2026-04-04 14:29:40');
 
 --
 -- ダンプしたテーブルのインデックス
